@@ -1,0 +1,35 @@
+Desvio padrão 10% - Teste 0: 7452758 page misses
+Desvio padrão 10% - Teste 1: 7457221 page misses
+Desvio padrão 10% - Teste 2: 7435916 page misses
+Desvio padrão 10% - Teste 3: 7439789 page misses
+Desvio padrão 10% - Teste 4: 7442766 page misses
+Total: 37228450, Média: 7445689.50, Tempo médio: 108.194400
+
+Desvio padrão 20% - Teste 0: 120147815 page misses
+Desvio padrão 20% - Teste 1: 120172607 page misses
+Desvio padrão 20% - Teste 2: 120186546 page misses
+Desvio padrão 20% - Teste 3: 120168492 page misses
+Desvio padrão 20% - Teste 4: 120170614 page misses
+Total: 600846074, Média: 120169216.00, Tempo médio: 113.301000
+
+Desvio padrão 30% - Teste 0: 220925860 page misses
+Desvio padrão 30% - Teste 1: 220985378 page misses
+Desvio padrão 30% - Teste 2: 220986519 page misses
+Desvio padrão 30% - Teste 3: 220959402 page misses
+Desvio padrão 30% - Teste 4: 220873718 page misses
+Total: 1104730877, Média: 220946176.00, Tempo médio: 120.774800
+
+Desvio padrão 40% - Teste 0: 223310680 page misses
+Desvio padrão 40% - Teste 1: 223329842 page misses
+Desvio padrão 40% - Teste 2: 223336075 page misses
+Desvio padrão 40% - Teste 3: 223354371 page misses
+Desvio padrão 40% - Teste 4: 223331566 page misses
+Total: 1116662534, Média: 223332512.00, Tempo médio: 142.740600
+
+Desvio padrão 50% - Teste 0: 213649097 page misses
+Desvio padrão 50% - Teste 1: 213649564 page misses
+Desvio padrão 50% - Teste 2: 213637868 page misses
+Desvio padrão 50% - Teste 3: 213627641 page misses
+Desvio padrão 50% - Teste 4: 213640687 page misses
+Total: 1068204857, Média: 213640976.00, Tempo médio: 145.145400
+

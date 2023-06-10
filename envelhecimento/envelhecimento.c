@@ -31,6 +31,8 @@
  */
 #define TEST_ACCESSES 2000000
 
+void min_heapify(int arr[], int length, int i);
+
 /* Implementação de página */
 
 struct page_t {
@@ -84,7 +86,6 @@ void remove_page(int mv_index) {
     pages_in_mr--;
 }
 
-// contador = (contador >> 1) + (referenciado << 7);
 int get_page(int mv_index) {
     if (MV[mv_index].present) {
         // Presente
@@ -102,7 +103,7 @@ int get_page(int mv_index) {
             }
         }
     }
-
+    /*
     struct page_t* chosen_page = &MV[MR[0]];
     for (mr_index = 0; mr_index < MR_LENGTH; mr_index++) {
         if (MV[MR[mr_index]].tick_accessed < chosen_page->tick_accessed) {
@@ -110,10 +111,59 @@ int get_page(int mv_index) {
         }
     }
     mr_index = chosen_page->mr_page;
+    */
+    mr_index = 0;
     remove_page(MR[mr_index]);
     add_page(mv_index, mr_index);
+    min_heapify(MR, MR_LENGTH, 0);
     return 1;
 }
+
+/* Implementação de Heap */
+
+void swap(int* a, int* b) {
+    int temp = *a;
+    int temp_page = MV[*a].mr_page;
+    MV[*a].mr_page = MV[*b].mr_page;
+    *a = *b;
+    MV[*b].mr_page = temp_page;
+    *b = temp;
+}
+
+void min_heapify(int arr[], int length, int i) {
+    int left = 2*i + 1;
+    int right = 2*i + 2;
+    int smallest;
+    if (left < length && MV[arr[left]].tick_accessed < MV[arr[i]].tick_accessed) {
+        smallest = left;
+    }
+    else {
+        smallest = i;
+    }
+    if (right < length && MV[arr[right]].tick_accessed < MV[arr[i]].tick_accessed) {
+        smallest = right;
+    }
+    if (smallest != i) {
+        swap(&MR[i], &MR[smallest]);
+        min_heapify(arr, length, smallest);
+    }
+}
+
+void build_min_heap(int arr[], int length) {
+    int i;
+    for (i = length/2; i >=0; i--) {
+        min_heapify(arr, length, i);
+    }
+}
+
+void heap_update_key(int arr[], int i) {
+    while (i > 0 && MV[arr[i/2]].tick_accessed > MV[arr[i]].tick_accessed) {
+        swap(&arr[i], &arr[i/2]);
+        i = i/2;
+    }
+}
+
+/* Testes */
 
 double random_normal(double mu, double sigma) {
     static int alternate = 0;
@@ -139,7 +189,6 @@ int test(float std_dev, int seed) {
     initialize_page_table(MV, MV_LENGTH);
     initialize_vector(MR, MR_LENGTH);
     pages_in_mr = 0;
-    int i;
     srand(seed);
     
     float avg = MV_LENGTH / 2;
@@ -149,9 +198,13 @@ int test(float std_dev, int seed) {
     for (t = 0; t < TEST_TICKS; t++) {
         int p;
         for (p = 0; p < MV_LENGTH; p++) {
-            // Reinicia o bit de referenciado de cada item da tabela
+            // Move os bits para a direita e adiciona o bit de referenciado à esquerda
             MV[p].tick_accessed = (MV[p].tick_accessed >> 1) + (MV[p].referenced << 7);
+            if (MV[p].referenced == 1 && MV[p].present == 1) {
+                heap_update_key(MR, MV[p].mr_page);
+            }
             
+            // Reinicia o bit de referenciado de cada item da tabela
             MV[p].referenced = 0;
         }
         for (a = 0; a < TEST_ACCESSES; a++) {
