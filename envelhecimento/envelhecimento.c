@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#define _USE_MATH_DEFINES
 #include <math.h>
 
 /*
@@ -103,15 +104,7 @@ int get_page(int mv_index) {
             }
         }
     }
-    /*
-    struct page_t* chosen_page = &MV[MR[0]];
-    for (mr_index = 0; mr_index < MR_LENGTH; mr_index++) {
-        if (MV[MR[mr_index]].tick_accessed < chosen_page->tick_accessed) {
-            chosen_page = &MV[MR[mr_index]];
-        }
-    }
-    mr_index = chosen_page->mr_page;
-    */
+
     mr_index = 0;
     remove_page(MR[mr_index]);
     add_page(mv_index, mr_index);
@@ -146,13 +139,6 @@ void min_heapify(int arr[], int length, int i) {
     if (smallest != i) {
         swap(&MR[i], &MR[smallest]);
         min_heapify(arr, length, smallest);
-    }
-}
-
-void build_min_heap(int arr[], int length) {
-    int i;
-    for (i = length/2; i >=0; i--) {
-        min_heapify(arr, length, i);
     }
 }
 
@@ -200,8 +186,15 @@ int test(float std_dev, int seed) {
         for (p = 0; p < MV_LENGTH; p++) {
             // Move os bits para a direita e adiciona o bit de referenciado à esquerda
             MV[p].tick_accessed = (MV[p].tick_accessed >> 1) + (MV[p].referenced << 7);
-            if (MV[p].referenced == 1 && MV[p].present == 1) {
-                heap_update_key(MR, MV[p].mr_page);
+            if (MV[p].present == 1) {
+                if (MV[p].referenced == 0) {
+                    // O valor diminuiu, mova a chave para cima no heap
+                    heap_update_key(MR, MV[p].mr_page);
+                }
+                else {
+                    // O valor aumentou, ajuste as chaves abaixo no heap
+                    min_heapify(MR, MR_LENGTH, MV[p].mr_page);
+                }
             }
             
             // Reinicia o bit de referenciado de cada item da tabela
@@ -220,7 +213,7 @@ int test(float std_dev, int seed) {
 
 int main(void) {
     int t, std_dev, seed = 0;
-    for (std_dev = 10; std_dev <= 50; std_dev += 10) {
+    for (std_dev = 10; std_dev <= 30; std_dev += 5) {
         int total = 0;
         clock_t start, end;
         double time_elapsed;

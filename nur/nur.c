@@ -253,7 +253,7 @@ int test(float std_dev, int seed) {
 
 int main(void) {
     int t, std_dev, seed = 0;
-    for (std_dev = 10; std_dev <= 50; std_dev += 10) {
+    for (std_dev = 10; std_dev <= 30; std_dev += 5) {
         int total = 0;
         clock_t start, end;
         double time_elapsed;
